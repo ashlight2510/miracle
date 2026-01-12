@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>MIRACLE | 한국보다 더 좋은 조건에서 태어날 확률은?</title>
+    <meta
+      name="description"
+      content="한국보다 조건 지수가 조금 더 높은 나라에서 태어날 확률을 숫자로 체감해보는 페이지. 국가 우열 판단 없이, 확률 분포만 다룹니다."
+    />
+
+    <!-- OG (추후 funnyfunny 규칙에 맞게 교체 가능) -->
+    <meta property="og:title" content="MIRACLE" />
+    <meta
+      property="og:description"
+      content="한국보다 더 좋은 조건에서 태어날 확률은?"
+    />
+    <meta
+      property="og:image"
+      content="https://dummyimage.com/1200x630/0b1220/ffffff&text=MIRACLE"
+    />
+
+    <style>
+      :root {
+        --bg: #0b1220;
+        --card: #0f1a2e;
+        --text: #e9eef7;
+        --muted: #9fb0c8;
+        --line: #1c2a45;
+        --accent: #8be9fd;
+        --gold: #ffd166;
+        --good: #a7f3d0;
+        --shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+        --radius: 18px;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto,
+          "Apple SD Gothic Neo", "Noto Sans KR", Arial, sans-serif;
+        background: radial-gradient(
+            1200px 800px at 70% 10%,
+            rgba(139, 233, 253, 0.08),
+            transparent 60%
+          ),
+          radial-gradient(
+            900px 600px at 20% 0%,
+            rgba(255, 209, 102, 0.08),
+            transparent 55%
+          ),
+          var(--bg);
+        color: var(--text);
+        line-height: 1.5;
+      }
+      .wrap {
+        max-width: 980px;
+        margin: 0 auto;
+        padding: 28px 18px 60px;
+      }
+      header {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        gap: 14px;
+        margin-bottom: 18px;
+      }
+      .brand {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+      }
+      .logo {
+        font-weight: 900;
+        letter-spacing: 0.7px;
+        font-size: 18px;
+        color: var(--accent);
+      }
+      .subtitle {
+        color: var(--muted);
+        font-size: 14px;
+      }
+      .pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 8px 12px;
+        border: 1px solid var(--line);
+        border-radius: 999px;
+        color: var(--muted);
+        font-size: 12px;
+        background: rgba(255, 255, 255, 0.02);
+        white-space: nowrap;
+      }
+      .grid {
+        display: grid;
+        grid-template-columns: 1.1fr 0.9fr;
+        gap: 14px;
+      }
+      @media (max-width: 880px) {
+        .grid {
+          grid-template-columns: 1fr;
+        }
+      }
+      .card {
+        background: linear-gradient(
+          180deg,
+          rgba(255, 255, 255, 0.03),
+          rgba(255, 255, 255, 0.01)
+        );
+        border: 1px solid var(--line);
+        border-radius: var(--radius);
+        box-shadow: var(--shadow);
+        padding: 18px;
+      }
+      .h1 {
+        font-size: 26px;
+        font-weight: 1000;
+        margin: 2px 0 6px;
+        letter-spacing: -0.2px;
+      }
+      .lead {
+        color: var(--muted);
+        margin: 0 0 14px;
+      }
+      .sectionTitle {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 10px;
+        margin: 0 0 10px;
+        font-weight: 900;
+      }
+      .small {
+        font-size: 12px;
+        color: var(--muted);
+      }
+      .divider {
+        height: 1px;
+        background: var(--line);
+        margin: 14px 0;
+      }
+      .quote {
+        border-left: 3px solid rgba(139, 233, 253, 0.35);
+        padding: 10px 12px;
+        background: rgba(139, 233, 253, 0.06);
+        border-radius: 12px;
+        margin: 12px 0 0;
+        color: var(--text);
+      }
+      .quote.gold {
+        border-left-color: rgba(255, 209, 102, 0.45);
+        background: rgba(255, 209, 102, 0.08);
+      }
+      .tag {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 8px 10px;
+        border-radius: 999px;
+        border: 1px solid var(--line);
+        color: var(--muted);
+        font-size: 12px;
+        background: rgba(0, 0, 0, 0.15);
+      }
+      .kpi {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+      }
+      @media (max-width: 520px) {
+        .kpi {
+          grid-template-columns: 1fr;
+        }
+      }
+      .kpiCard {
+        padding: 12px 12px 10px;
+        border: 1px solid var(--line);
+        border-radius: 16px;
+        background: rgba(0, 0, 0, 0.14);
+      }
+      .kpiLabel {
+        color: var(--muted);
+        font-size: 12px;
+        margin-bottom: 6px;
+      }
+      .kpiValue {
+        font-size: 18px;
+        font-weight: 1000;
+      }
+      .kpiNote {
+        color: var(--muted);
+        font-size: 12px;
+        margin-top: 4px;
+      }
+      .track {
+        height: 12px;
+        background: rgba(255, 255, 255, 0.04);
+        border-radius: 999px;
+        margin-top: 10px;
+        overflow: hidden;
+        border: 1px solid rgba(255, 255, 255, 0.04);
+      }
+      .fill {
+        height: 100%;
+        width: 0;
+        background: rgba(139, 233, 253, 0.55);
+      }
+      .fill.gold {
+        background: rgba(255, 209, 102, 0.55);
+      }
+      .fill.good {
+        background: rgba(167, 243, 208, 0.55);
+      }
+      .row {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+      }
+      .btn {
+        cursor: pointer;
+        border: 1px solid var(--line);
+        background: rgba(255, 255, 255, 0.03);
+        color: var(--text);
+        padding: 10px 12px;
+        border-radius: 12px;
+        font-weight: 800;
+        transition: 0.15s transform ease, 0.15s background ease,
+          0.15s border ease;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+      }
+      .btn:hover {
+        transform: translateY(-1px);
+        border-color: rgba(139, 233, 253, 0.35);
+        background: rgba(139, 233, 253, 0.06);
+      }
+      .btn.primary {
+        border-color: rgba(139, 233, 253, 0.4);
+        background: rgba(139, 233, 253, 0.12);
+      }
+      .btn.warn {
+        border-color: rgba(255, 209, 102, 0.35);
+        background: rgba(255, 209, 102, 0.1);
+      }
+      .fine {
+        color: var(--muted);
+        font-size: 12px;
+        margin-top: 10px;
+      }
+      .control {
+        border: 1px solid var(--line);
+        border-radius: 16px;
+        background: rgba(0, 0, 0, 0.14);
+        padding: 12px;
+      }
+      .control label {
+        display: flex;
+        justify-content: space-between;
+        gap: 10px;
+        font-weight: 900;
+      }
+      input[type="range"] {
+        width: 100%;
+        margin-top: 10px;
+      }
+      .mono {
+        font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
+          "Liberation Mono", "Courier New", monospace;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="wrap">
+      <header>
+        <div class="brand">
+          <div class="logo">MIRACLE</div>
+          <div class="subtitle">한국보다 더 좋은 조건에서 태어날 확률은?</div>
+        </div>
+        <div class="pill">국가 우열 판단 ❌ · 확률 분포만 ⭕</div>
+      </header>
+
+      <div class="grid">
+        <!-- LEFT -->
+        <main class="card">
+          <div class="sectionTitle">
+            <span>🧭 이 페이지는 뭘 말하나요?</span>
+            <span class="small">논쟁 방지용 안내</span>
+          </div>
+
+          <div class="quote">
+            한국이 최고라고 말하지 않습니다. <br />
+            다만 <b>소득·보건·교육·안전</b>과 상관관계가 큰 지표들을 묶어,
+            <b>확률 분포</b>로만 보여줍니다.
+          </div>
+
+          <div class="divider"></div>
+
+          <div class="h1" id="headline">
+            한국보다 조건 지수가 조금 더 높은 곳에서 태어날 확률
+          </div>
+          <p class="lead">
+            “더 좋다/나쁘다”가 아니라,
+            <b>조건 지수 기준으로 조금 더 높은 구간</b>을 가정합니다.
+            (연도·지표에 따라 달라질 수 있어 <b>범위</b>로 보여줘요)
+          </p>
+
+          <div class="kpi">
+            <div class="kpiCard">
+              <div class="kpiLabel">📌 확률(전 세계 인구 기준)</div>
+              <div class="kpiValue">
+                <span id="pBetter">10</span> ~ <span id="pBetterMax">13</span>%
+              </div>
+              <div class="kpiNote">한국보다 조건 지수가 조금 더 높은 구간</div>
+            </div>
+            <div class="kpiCard">
+              <div class="kpiLabel">📌 반대(같거나 낮은 구간)</div>
+              <div class="kpiValue">
+                <span id="pNotBetter">87</span> ~
+                <span id="pNotBetterMax">90</span>%
+              </div>
+              <div class="kpiNote">대부분은 이쪽에서 태어납니다</div>
+            </div>
+          </div>
+
+          <div class="divider"></div>
+
+          <div class="sectionTitle">
+            <span>📊 한 방에 체감하기</span>
+            <span class="small">“100명 중 몇 명?”</span>
+          </div>
+
+          <div class="quote gold" id="oneLiner">
+            전 세계에서 태어나는 아이 100명 중 <b>10~13명</b>만<br />
+            한국보다 조건 지수가 조금 더 높은 구간에서 태어납니다.
+          </div>
+
+          <div class="track" aria-label="확률 바">
+            <div class="fill gold" id="barBetter" style="width: 12%"></div>
+          </div>
+          <div class="track" aria-label="반대 바" style="margin-top: 8px">
+            <div class="fill" id="barNotBetter" style="width: 88%"></div>
+          </div>
+
+          <div class="divider"></div>
+
+          <div class="sectionTitle">
+            <span>😂 MIRACLE식 결론(타입 A)</span>
+            <span class="small">가볍게, 근데 쎄게</span>
+          </div>
+
+          <div class="quote" id="funLine">
+            더 좋은 곳은 있어요. 근데… <b>생각보다 많이는 없네요</b>.
+          </div>
+
+          <div class="quote" id="lifeMsg" style="margin-top: 10px">
+            이렇게 희귀한 확률로 태어났다면,<br />
+            하루하루를 조금은 즐겁게, 조금은 아껴 써도 되지 않을까요?<br />
+            <b>로또보다 귀한 삶이니까요.</b>
+          </div>
+
+          <div class="divider"></div>
+
+          <div class="row">
+            <!-- 메인 테스트 링크: 너가 실제 경로로 바꿔 끼우면 됨 -->
+            <a
+              class="btn primary"
+              href="https://miracle.funnyfunny.cloud/"
+              id="goMain"
+              >🧪 내 출생 운 테스트 하러 가기</a
+            >
+            <button class="btn warn" id="btnReroll">🎲 문구 새로 뽑기</button>
+            <button class="btn" id="btnCopy">📤 요약 문구 복사</button>
+          </div>
+
+          <p class="fine">
+            * 이 페이지는 “재미로 보는 확률/통계 기반 시뮬레이션”입니다. <br />
+            * 국가나 개인의 가치를 평가하지 않습니다. (취향·행복은 숫자로 못
+            정해요)
+          </p>
+        </main>
+
+        <!-- RIGHT -->
+        <aside class="card">
+          <div class="sectionTitle">
+            <span>🧩 시나리오 조절</span>
+            <span class="small">보수/낙관 범위 체감</span>
+          </div>
+
+          <div class="control">
+            <label>
+              <span>“더 좋은 조건 구간” 확률</span>
+              <span class="mono"><span id="rangeVal">12</span>%</span>
+            </label>
+            <input type="range" id="range" min="8" max="16" value="12" />
+            <div class="fine">
+              슬라이더는 “연도/지표/정의에 따라 달라질 수 있는 범위”를 사용자가
+              체감해보는 용도야.
+            </div>
+          </div>
+
+          <div class="divider"></div>
+
+          <div class="sectionTitle">
+            <span>🧠 설명(짧게)</span>
+            <span class="small">민감도 최소화</span>
+          </div>
+
+          <div class="quote">
+            - “좋고 나쁨”이 아니라 <b>조건 지수</b> 기준입니다. <br />
+            - <b>국가 수</b>가 아니라 <b>인구 기준</b>으로 계산하는 게
+            핵심입니다. <br />
+            - 그래서 “생각보다 적다”가 숫자로 체감됩니다.
+          </div>
+
+          <div class="divider"></div>
+
+          <div class="sectionTitle">
+            <span>🧾 About (짧게)</span>
+            <span class="small">네 데이터 반영</span>
+          </div>
+
+          <div class="quote">
+            전 세계에는 출생 가능한 국가가 약 <b>204개</b> 존재합니다. <br />
+            (바티칸은 ‘출생 국가’가 아니므로 제외)
+          </div>
+
+          <div class="divider"></div>
+
+          <div class="sectionTitle">
+            <span>🔗 추천 연결</span>
+            <span class="small">체류시간 ↑</span>
+          </div>
+
+          <div class="row">
+            <a
+              class="btn"
+              href="https://miracle.funnyfunny.cloud/"
+              target="_self"
+              >🏠 메인으로</a
+            >
+            <a
+              class="btn"
+              href="https://funnyfunny.cloud"
+              target="_blank"
+              rel="noreferrer"
+              >🧩 다른 서비스 보기</a
+            >
+          </div>
+        </aside>
+      </div>
+    </div>
+
+    <script>
+      // 이 페이지에서 다루는 핵심 범위(기본값)
+      // - pBetter: "한국보다 조건 지수가 조금 더 높은 구간"에 태어날 확률(전 세계 인구 기준)
+      // - 블로그 원문 같은 공격적 서술은 제거하고, 숫자/범위만 남김
+      const defaultMin = 10;
+      const defaultMax = 13;
+
+      const funLines = [
+        "더 좋은 곳은 있어요. 근데… <b>생각보다 많이는 없네요</b>.",
+        "한국이 최고는 아니지만, 확률로 보면 <b>상위권 출발</b>은 맞는 듯.",
+        "‘탈출’이 아니라 ‘확률’로 보면… <b>이미 꽤 위쪽</b>에서 시작했네요.",
+        "더 좋은 조건? 있음. 근데 그거 <b>뽑기 난이도</b>가 은근 높음.",
+        "로또는 못 맞혀도, 이런 출발 확률이면… <b>오늘은 좀 봐주자</b>.",
+      ];
+
+      const $ = (id) => document.getElementById(id);
+
+      function setRangeLabels(minV, maxV) {
+        $("pBetter").textContent = minV;
+        $("pBetterMax").textContent = maxV;
+
+        $("pNotBetter").textContent = 100 - maxV;
+        $("pNotBetterMax").textContent = 100 - minV;
+
+        $("oneLiner").innerHTML =
+          `전 세계에서 태어나는 아이 100명 중 <b>${minV}~${maxV}명</b>만<br/>` +
+          `한국보다 조건 지수가 조금 더 높은 구간에서 태어납니다.`;
+
+        // 바는 중앙값으로 표현
+        const mid = Math.round((minV + maxV) / 2);
+        $("barBetter").style.width = mid + "%";
+        $("barNotBetter").style.width = 100 - mid + "%";
+      }
+
+      function reroll() {
+        const idx = Math.floor(Math.random() * funLines.length);
+        $("funLine").innerHTML = funLines[idx];
+      }
+
+      async function copySummary() {
+        const minV = Number($("pBetter").textContent);
+        const maxV = Number($("pBetterMax").textContent);
+
+        const text = `한국보다 조건 지수가 조금 더 높은 곳에서 태어날 확률: 약 ${minV}~${maxV}%
+전 세계 100명 중 ${minV}~${maxV}명 정도
+
+결론: 더 좋은 곳은 있어요. 근데 생각보다 많이는 없음 😎
+miracle.funnyfunny.cloud`;
+
+        try {
+          await navigator.clipboard.writeText(text);
+          alert("복사 완료! 친구한테 던져보자 😎");
+        } catch (e) {
+          prompt("복사해서 쓰기:", text);
+        }
+      }
+
+      // 슬라이더: “중앙값”을 조절하면 범위가 자연스럽게 따라오게 (±2 고정)
+      function onRange() {
+        const mid = Number($("range").value);
+        $("rangeVal").textContent = mid;
+
+        const minV = Math.max(1, mid - 2);
+        const maxV = Math.min(99, mid + 2);
+
+        setRangeLabels(minV, maxV);
+      }
+
+      // init
+      setRangeLabels(defaultMin, defaultMax);
+      reroll();
+      $("btnReroll").addEventListener("click", reroll);
+      $("btnCopy").addEventListener("click", copySummary);
+      $("range").addEventListener("input", onRange);
+    </script>
+  </body>
+</html>
