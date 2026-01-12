@@ -1,0 +1,545 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <link rel="icon" href="favicon.svg" type="image/svg+xml" />
+    <title>MIRACLE | 결과</title>
+    <meta
+      name="description"
+      content="한국보다 조건 지수가 조금 더 높은 나라에서 태어날 확률을 숫자로 체감해보는 페이지. 국가 우열 판단 없이, 확률 분포만 다룹니다."
+    />
+
+    <style>
+      :root {
+        --bg: #0b1220;
+        --card: #0f1a2e;
+        --text: #e9eef7;
+        --muted: #9fb0c8;
+        --line: #1c2a45;
+        --accent: #8be9fd;
+        --gold: #ffd166;
+        --good: #a7f3d0;
+        --shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+        --radius: 18px;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto,
+          "Apple SD Gothic Neo", "Noto Sans KR", Arial, sans-serif;
+        background: radial-gradient(
+            1200px 800px at 70% 10%,
+            rgba(139, 233, 253, 0.08),
+            transparent 60%
+          ),
+          radial-gradient(
+            900px 600px at 20% 0%,
+            rgba(255, 209, 102, 0.08),
+            transparent 55%
+          ),
+          var(--bg);
+        color: var(--text);
+        line-height: 1.5;
+      }
+      .wrap {
+        max-width: 980px;
+        margin: 0 auto;
+        padding: 28px 18px 60px;
+      }
+      header {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        gap: 14px;
+        margin-bottom: 18px;
+      }
+      .brand {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+      }
+      .logo {
+        font-weight: 900;
+        letter-spacing: 0.7px;
+        font-size: 18px;
+        color: var(--accent);
+      }
+      .subtitle {
+        color: var(--muted);
+        font-size: 14px;
+      }
+      .pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 8px 12px;
+        border: 1px solid var(--line);
+        border-radius: 999px;
+        color: var(--muted);
+        font-size: 12px;
+        background: rgba(255, 255, 255, 0.02);
+        white-space: nowrap;
+      }
+      .grid {
+        display: grid;
+        grid-template-columns: 1.1fr 0.9fr;
+        gap: 14px;
+      }
+      @media (max-width: 880px) {
+        .grid {
+          grid-template-columns: 1fr;
+        }
+      }
+      .card {
+        background: linear-gradient(
+          180deg,
+          rgba(255, 255, 255, 0.03),
+          rgba(255, 255, 255, 0.01)
+        );
+        border: 1px solid var(--line);
+        border-radius: var(--radius);
+        box-shadow: var(--shadow);
+        padding: 18px;
+      }
+      .h1 {
+        font-size: 26px;
+        font-weight: 1000;
+        margin: 2px 0 6px;
+        letter-spacing: -0.2px;
+      }
+      .lead {
+        color: var(--muted);
+        margin: 0 0 14px;
+      }
+      .sectionTitle {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 10px;
+        margin: 0 0 10px;
+        font-weight: 900;
+      }
+      .small {
+        font-size: 12px;
+        color: var(--muted);
+      }
+      .divider {
+        height: 1px;
+        background: var(--line);
+        margin: 14px 0;
+      }
+      .quote {
+        border-left: 3px solid rgba(139, 233, 253, 0.35);
+        padding: 10px 12px;
+        background: rgba(139, 233, 253, 0.06);
+        border-radius: 12px;
+        margin: 12px 0 0;
+        color: var(--text);
+      }
+      .quote.gold {
+        border-left-color: rgba(255, 209, 102, 0.45);
+        background: rgba(255, 209, 102, 0.08);
+      }
+      .tag {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 8px 10px;
+        border-radius: 999px;
+        border: 1px solid var(--line);
+        color: var(--muted);
+        font-size: 12px;
+        background: rgba(0, 0, 0, 0.15);
+      }
+      .kpi {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+      }
+      @media (max-width: 520px) {
+        .kpi {
+          grid-template-columns: 1fr;
+        }
+      }
+      .kpiCard {
+        padding: 12px 12px 10px;
+        border: 1px solid var(--line);
+        border-radius: 16px;
+        background: rgba(0, 0, 0, 0.14);
+      }
+      .kpiLabel {
+        color: var(--muted);
+        font-size: 12px;
+        margin-bottom: 6px;
+      }
+      .kpiValue {
+        font-size: 18px;
+        font-weight: 1000;
+      }
+      .kpiNote {
+        color: var(--muted);
+        font-size: 12px;
+        margin-top: 4px;
+      }
+      .heroBlock {
+        text-align: center;
+        padding: 10px 12px 14px;
+        border-radius: 16px;
+        border: 1px solid var(--line);
+        background: rgba(0, 0, 0, 0.18);
+      }
+      .heroNumber {
+        font-size: 34px;
+        font-weight: 1000;
+        letter-spacing: -0.4px;
+        margin: 10px 0 6px;
+        color: var(--gold);
+      }
+      .heroPercent {
+        color: var(--muted);
+        font-size: 13px;
+      }
+      .pause {
+        text-align: center;
+        color: var(--muted);
+        font-size: 12px;
+        margin: 10px 0;
+      }
+      .track {
+        height: 12px;
+        background: rgba(255, 255, 255, 0.04);
+        border-radius: 999px;
+        margin-top: 10px;
+        overflow: hidden;
+        border: 1px solid rgba(255, 255, 255, 0.04);
+      }
+      .fill {
+        height: 100%;
+        width: 0;
+        background: rgba(139, 233, 253, 0.55);
+      }
+      .fill.gold {
+        background: rgba(255, 209, 102, 0.55);
+      }
+      .fill.good {
+        background: rgba(167, 243, 208, 0.55);
+      }
+      .row {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+      }
+      .btn {
+        cursor: pointer;
+        border: 1px solid var(--line);
+        background: rgba(255, 255, 255, 0.03);
+        color: var(--text);
+        padding: 10px 12px;
+        border-radius: 12px;
+        font-weight: 800;
+        transition: 0.15s transform ease, 0.15s background ease,
+          0.15s border ease;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+      }
+      .btn:hover {
+        transform: translateY(-1px);
+        border-color: rgba(139, 233, 253, 0.35);
+        background: rgba(139, 233, 253, 0.06);
+      }
+      .btn.primary {
+        border-color: rgba(139, 233, 253, 0.4);
+        background: rgba(139, 233, 253, 0.12);
+      }
+      .btn.warn {
+        border-color: rgba(255, 209, 102, 0.35);
+        background: rgba(255, 209, 102, 0.1);
+      }
+      .fine {
+        color: var(--muted);
+        font-size: 12px;
+        margin-top: 10px;
+      }
+      .control {
+        border: 1px solid var(--line);
+        border-radius: 16px;
+        background: rgba(0, 0, 0, 0.14);
+        padding: 12px;
+      }
+      .control label {
+        display: flex;
+        justify-content: space-between;
+        gap: 10px;
+        font-weight: 900;
+      }
+      input[type="range"] {
+        width: 100%;
+        margin-top: 10px;
+      }
+      .mono {
+        font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
+          "Liberation Mono", "Courier New", monospace;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="wrap">
+      <header>
+        <div class="brand">
+          <div class="logo">MIRACLE</div>
+          <div class="subtitle">한국보다 더 좋은 조건에서 태어날 확률은?</div>
+        </div>
+        <div class="pill">국가 우열 판단 ❌ · 확률 분포만 ⭕</div>
+      </header>
+
+      <div class="grid">
+        <!-- LEFT -->
+        <main class="card">
+          <div class="sectionTitle">
+            <span>🎯 FINAL</span>
+          </div>
+
+          <div class="quote">
+            당신은<br />
+            생각보다 훨씬 어려운 조건을 통과해<br />
+            여기까지 왔습니다.
+          </div>
+
+          <div class="pause">스크롤을 내려보세요</div>
+
+          <div class="heroBlock">
+            지금까지 선택한 모든 조건을 합치면,<br />
+            당신이 이 환경에서 태어날 확률은
+            <div class="heroNumber" id="finalMainRatio">-</div>
+            <div class="heroPercent" id="finalMainPercent">-</div>
+          </div>
+
+          <div class="quote">
+            이건<br />
+            로또보다 운이 좋다는 말이 아닙니다.<br />
+            그냥, 쉽지 않은 조건을<br />
+            이미 한 번은 통과했다는 뜻입니다.
+          </div>
+
+          <div class="quote gold" style="margin-top: 10px">
+            참고로,<br />
+            정자 확률을 제외해도<br />
+            <b id="finalNoSpermInline">-</b> 입니다.
+          </div>
+
+          <div class="sectionTitle">
+            <span>🧾 그래서 당신은?</span>
+          </div>
+
+          <div class="quote" id="funLine"></div>
+
+          <div class="quote" id="lifeMsg" style="margin-top: 10px">
+            이렇게 희귀한 확률로 태어났다면,<br />
+            하루하루를 조금은 즐겁게, 조금은 아껴 써도 되지 않을까요?<br />
+            <b>로또보다 귀한 삶이니까요.</b>
+          </div>
+
+          <div class="divider"></div>
+
+          <div class="row">
+            <a href="survey.html" class="btn primary">🔄 다시 테스트하기</a>
+            <button class="btn warn" id="btnReroll">🎲 문구 새로 뽑기</button>
+            <button class="btn" id="btnCopy">📤 요약 문구 복사</button>
+          </div>
+
+          <p class="fine">
+            * 이 페이지는 "재미로 보는 확률/통계 기반 시뮬레이션"입니다. <br />
+            * 국가나 개인의 가치를 평가하지 않습니다. (취향·행복은 숫자로 못
+            정해요)
+          </p>
+        </main>
+
+        <!-- RIGHT -->
+        <aside class="card">
+          <div class="sectionTitle">
+            <span>🧾 선택 요약</span>
+            <span class="small">정자 확률 제외</span>
+          </div>
+
+          <div class="kpi">
+            <div class="kpiCard">
+              <div class="kpiLabel">출생 지역</div>
+              <div class="kpiValue" id="kpiRegion">-</div>
+              <div class="kpiNote" id="kpiRegionNote">-</div>
+            </div>
+            <div class="kpiCard">
+              <div class="kpiLabel">안정 조건</div>
+              <div class="kpiValue" id="kpiConditionCount">-</div>
+              <div class="kpiNote" id="kpiConditionRate">-</div>
+            </div>
+          </div>
+
+          <div class="kpi" style="margin-top: 10px">
+            <div class="kpiCard">
+              <div class="kpiLabel">피하고 싶은 환경</div>
+              <div class="kpiValue" id="kpiExcludeCount">-</div>
+              <div class="kpiNote" id="kpiExcludeList">-</div>
+            </div>
+            <div class="kpiCard">
+              <div class="kpiLabel">남는 확률</div>
+              <div class="kpiValue" id="kpiRemaining">-</div>
+              <div class="kpiNote" id="kpiRemainingMsg">선택 기준 곱셈</div>
+            </div>
+          </div>
+
+          <details style="margin-top: 12px">
+            <summary class="sectionTitle" style="cursor: pointer">
+              <span>🧠 설명 / About</span>
+              <span class="small">펼치기</span>
+            </summary>
+            <div class="quote" style="margin-top: 10px">
+              - "좋고 나쁨"이 아니라 <b>조건 지수</b> 기준입니다. <br />
+              - <b>국가 수</b>가 아니라 <b>인구 기준</b>으로 계산하는 게
+              핵심입니다. <br />
+              - 겹침은 <b>덧셈이 아니라 곱셈</b>으로 보정합니다. <br />
+              - 그래서 "생각보다 적다"가 숫자로 체감됩니다.
+            </div>
+            <div class="quote" style="margin-top: 10px">
+              전 세계에는 출생 가능한 국가가 약 <b>204개</b> 존재합니다. <br />
+              (바티칸은 '출생 국가'가 아니므로 제외)
+            </div>
+            <div class="divider"></div>
+            <div class="row">
+              <a href="index.html" class="btn">🏠 처음으로</a>
+              <a
+                class="btn"
+                href="https://funnyfunny.cloud"
+                target="_blank"
+                rel="noreferrer"
+                >🧩 다른 서비스 보기</a
+              >
+            </div>
+          </details>
+        </aside>
+      </div>
+    </div>
+
+    <script>
+      // URL 파라미터에서 설문 데이터 가져오기
+      const urlParams = new URLSearchParams(window.location.search);
+      const region = urlParams.get("region") || "kr";
+      const conditions = urlParams.get("conditions") || "1111";
+      const exclusions = (urlParams.get("exclusions") || "")
+        .split(",")
+        .filter(Boolean);
+      const remaining = parseFloat(urlParams.get("remaining") || "1");
+
+      const funLines = [
+        "이미 한 번 확률적으로 이긴 사람이라면,<br />오늘 하루쯤은 조금 대충 살아도 괜찮지 않을까요?",
+        "이 정도 확률이면<br />인생 난이도는 이미 ‘하드 모드’ 클리어입니다.",
+        "확률적으로 이 정도면,<br />당신은 꽤나 귀한 출발점에 서 있습니다.",
+        "쉽지 않은 조건을 통과했다는 건,<br />이미 한 번은 ‘운’이 당신 편이었다는 뜻.",
+        "세상에 쉬운 출발은 없지만,<br />당신은 그중에서도 꽤 어려운 구간을 넘었습니다.",
+      ];
+
+      const $ = (id) => document.getElementById(id);
+
+      const conditionCount = conditions.split("").filter((c) => c === "1")
+        .length;
+      const conditionRateMap = {
+        1: "약 45%",
+        2: "약 30%",
+        3: "약 17%",
+        4: "약 8~9%",
+      };
+      const conditionProbMap = {
+        1: 0.45,
+        2: 0.3,
+        3: 0.17,
+        4: 0.085,
+      };
+
+      const exclusionLabels = {
+        exChina: "중국",
+        exIndia: "인도",
+        exAfrica: "아프리카 지역",
+        exConflict: "분쟁·내전 위험",
+        exLowEdu: "교육 접근 어려움",
+        exLowHealth: "의료 접근 어려움",
+        exUnsafe: "치안 불안",
+        exExtremePoverty: "극저소득 국가",
+        exWater: "식수·위생 취약",
+        exCorruption: "부패·법치 취약",
+      };
+
+      const excludeNames = exclusions.map(
+        (key) => exclusionLabels[key] || key
+      );
+      const excludeSummary =
+        excludeNames.length === 0
+          ? "선택 없음"
+          : excludeNames.length <= 3
+          ? excludeNames.join(", ")
+          : `${excludeNames.slice(0, 3).join(", ")} 외 ${
+              excludeNames.length - 3
+            }개`;
+
+      $("kpiRegion").textContent =
+        region === "kr" ? "대한민국" : "기타 국가";
+      $("kpiRegionNote").textContent =
+        region === "kr"
+          ? "전 세계 인구 대비 약 0.6%"
+          : "전 세계 인구 대비 값은 지역에 따라 다름";
+      $("kpiConditionCount").textContent = `${conditionCount}개 선택`;
+      $("kpiConditionRate").textContent =
+        conditionRateMap[conditionCount] || "선택 없음";
+      $("kpiExcludeCount").textContent = `${excludeNames.length}개`;
+      $("kpiExcludeList").textContent = excludeSummary;
+      const remainingSafe = Number.isFinite(remaining) ? remaining : 1;
+      $("kpiRemaining").textContent = `${(remainingSafe * 100).toFixed(1)}%`;
+
+      const baseProb = region === "kr" ? 0.006 : 0.015;
+      const conditionProb = conditionProbMap[conditionCount] || 1;
+      const regionProb = remainingSafe;
+      const spermProb = 1 / 300000000;
+
+      const withSperm = baseProb * conditionProb * regionProb * spermProb;
+      const withoutSperm = baseProb * conditionProb * regionProb;
+
+      const withSpermRatio = Math.round(1 / withSperm).toLocaleString();
+      const withoutSpermRatio = Math.round(1 / withoutSperm).toLocaleString();
+      const withSpermPercent = (withSperm * 100).toFixed(10);
+      const withoutSpermPercent = (withoutSperm * 100).toFixed(4);
+
+      $("finalMainRatio").textContent = `약 ${withSpermRatio}분의 1`;
+      $("finalMainPercent").textContent = `${withSpermPercent}%`;
+      $("finalNoSpermInline").textContent = `약 ${withoutSpermRatio}분의 1 (${withoutSpermPercent}%)`;
+
+      function reroll() {
+        const idx = Math.floor(Math.random() * funLines.length);
+        $("funLine").innerHTML = funLines[idx];
+      }
+
+      async function copySummary() {
+        const text = `정자 포함 확률: 약 ${withSpermRatio}분의 1 (${withSpermPercent}%)
+정자 제외 확률: 약 ${withoutSpermRatio}분의 1 (${withoutSpermPercent}%)
+
+결론: 이렇게 희귀한 확률로 태어났다면, 하루하루를 조금은 즐겁게, 조금은 아껴 써도 되지 않을까요? 로또보다 귀한 삶이니까요 😎
+miracle.funnyfunny.cloud`;
+
+        try {
+          await navigator.clipboard.writeText(text);
+          alert("복사 완료! 친구한테 던져보자 😎");
+        } catch (e) {
+          prompt("복사해서 쓰기:", text);
+        }
+      }
+
+      // init
+      reroll();
+      $("btnReroll").addEventListener("click", reroll);
+      $("btnCopy").addEventListener("click", copySummary);
+    </script>
+  </body>
+</html>

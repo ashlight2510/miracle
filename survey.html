@@ -1,0 +1,770 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <link rel="icon" href="favicon.svg" type="image/svg+xml" />
+    <title>MIRACLE | 설문</title>
+    <style>
+      :root {
+        --bg: #0b1220;
+        --card: #0f1a2e;
+        --text: #e9eef7;
+        --muted: #9fb0c8;
+        --line: #1c2a45;
+        --accent: #8be9fd;
+        --gold: #ffd166;
+        --good: #a7f3d0;
+        --shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+        --radius: 18px;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto,
+          "Apple SD Gothic Neo", "Noto Sans KR", Arial, sans-serif;
+        background: radial-gradient(
+            1200px 800px at 70% 10%,
+            rgba(139, 233, 253, 0.08),
+            transparent 60%
+          ),
+          radial-gradient(
+            900px 600px at 20% 0%,
+            rgba(255, 209, 102, 0.08),
+            transparent 55%
+          ),
+          var(--bg);
+        color: var(--text);
+        line-height: 1.5;
+      }
+      .wrap {
+        max-width: 680px;
+        margin: 0 auto;
+        padding: 28px 18px 60px;
+      }
+      header {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        gap: 14px;
+        margin-bottom: 24px;
+      }
+      .brand {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+      }
+      .logo {
+        font-weight: 900;
+        letter-spacing: 0.7px;
+        font-size: 18px;
+        color: var(--accent);
+      }
+      .subtitle {
+        color: var(--muted);
+        font-size: 14px;
+      }
+      .card {
+        background: linear-gradient(
+          180deg,
+          rgba(255, 255, 255, 0.03),
+          rgba(255, 255, 255, 0.01)
+        );
+        border: 1px solid var(--line);
+        border-radius: var(--radius);
+        box-shadow: var(--shadow);
+        padding: 28px;
+        margin-bottom: 20px;
+      }
+      .h1 {
+        font-size: 22px;
+        font-weight: 1000;
+        margin: 0 0 12px;
+        letter-spacing: -0.2px;
+      }
+      .lead {
+        color: var(--muted);
+        margin: 0 0 24px;
+      }
+      .step {
+        display: none;
+      }
+      .step.active {
+        display: block;
+      }
+      .stepNumber {
+        color: var(--accent);
+        font-size: 14px;
+        font-weight: 800;
+        margin-bottom: 8px;
+      }
+      .questionTitle {
+        font-weight: 800;
+        font-size: 18px;
+        margin-bottom: 12px;
+        color: var(--text);
+      }
+      .questionDesc {
+        color: var(--muted);
+        font-size: 14px;
+        margin-bottom: 20px;
+        line-height: 1.6;
+      }
+      .options {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        margin-bottom: 24px;
+      }
+      .option {
+        cursor: pointer;
+        border: 2px solid var(--line);
+        border-radius: 12px;
+        padding: 16px;
+        background: rgba(0, 0, 0, 0.14);
+        transition: all 0.2s ease;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        font-size: 16px;
+        font-weight: 600;
+      }
+      .option:hover {
+        border-color: rgba(139, 233, 253, 0.4);
+        background: rgba(139, 233, 253, 0.06);
+      }
+      .option.selected {
+        border-color: rgba(139, 233, 253, 0.6);
+        background: rgba(139, 233, 253, 0.12);
+      }
+      .checkboxGroup {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        margin-bottom: 24px;
+      }
+      .checkbox {
+        cursor: pointer;
+        border: 2px solid var(--line);
+        border-radius: 12px;
+        padding: 14px;
+        background: rgba(0, 0, 0, 0.14);
+        transition: all 0.2s ease;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+      }
+      .checkbox:hover {
+        border-color: rgba(139, 233, 253, 0.4);
+        background: rgba(139, 233, 253, 0.06);
+      }
+      .checkbox input[type="checkbox"] {
+        width: 20px;
+        height: 20px;
+        cursor: pointer;
+      }
+      .checkbox input[type="checkbox"]:checked + label {
+        color: var(--accent);
+      }
+      .checkbox label {
+        cursor: pointer;
+        flex: 1;
+        font-size: 15px;
+      }
+      .resultBox {
+        border-left: 3px solid rgba(139, 233, 253, 0.35);
+        padding: 16px 18px;
+        background: rgba(139, 233, 253, 0.06);
+        border-radius: 12px;
+        margin: 20px 0;
+        font-size: 16px;
+        line-height: 1.6;
+      }
+      .resultBox.gold {
+        border-left-color: rgba(255, 209, 102, 0.45);
+        background: rgba(255, 209, 102, 0.08);
+      }
+      .resultBox .highlight {
+        font-size: 20px;
+        font-weight: 1000;
+        color: var(--gold);
+        margin: 8px 0;
+      }
+      .btn {
+        cursor: pointer;
+        border: 1px solid var(--line);
+        background: rgba(139, 233, 253, 0.12);
+        border-color: rgba(139, 233, 253, 0.4);
+        color: var(--text);
+        padding: 14px 28px;
+        border-radius: 12px;
+        font-weight: 800;
+        transition: 0.15s transform ease, 0.15s background ease,
+          0.15s border ease;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 16px;
+        width: 100%;
+        justify-content: center;
+        margin-top: 8px;
+      }
+      .btn:hover {
+        transform: translateY(-2px);
+        border-color: rgba(139, 233, 253, 0.6);
+        background: rgba(139, 233, 253, 0.18);
+      }
+      .btn:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+      }
+      .summary {
+        background: rgba(0, 0, 0, 0.2);
+        border-radius: 12px;
+        padding: 16px;
+        margin: 20px 0;
+      }
+      .summaryItem {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin-bottom: 8px;
+        font-size: 14px;
+      }
+      .summaryItem:last-child {
+        margin-bottom: 0;
+      }
+      .progress {
+        height: 4px;
+        background: rgba(255, 255, 255, 0.04);
+        border-radius: 999px;
+        margin-bottom: 24px;
+        overflow: hidden;
+      }
+      .progressFill {
+        height: 100%;
+        background: rgba(139, 233, 253, 0.55);
+        transition: width 0.3s ease;
+      }
+      .fine {
+        color: var(--muted);
+        font-size: 12px;
+        margin-top: 12px;
+        line-height: 1.5;
+      }
+      .pause {
+        margin: 20px 0;
+        text-align: center;
+        color: var(--muted);
+        font-size: 14px;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="wrap">
+      <header>
+        <div class="brand">
+          <div class="logo">MIRACLE</div>
+          <div class="subtitle">설문 진행 중</div>
+        </div>
+        <a
+          href="index.html"
+          style="color: var(--muted); text-decoration: none; font-size: 14px"
+          >← 돌아가기</a
+        >
+      </header>
+
+      <div class="progress">
+        <div class="progressFill" id="progressFill" style="width: 20%"></div>
+      </div>
+
+      <!-- STEP 1: 지역 선택 -->
+      <div class="card step active" id="step1">
+        <div class="stepNumber">STEP 1</div>
+        <div class="questionTitle">당신이 태어난 지역은?</div>
+
+        <div class="options">
+          <div
+            class="option"
+            data-value="kr"
+            onclick="selectOption(this, 'region', 'kr')"
+          >
+            🇰🇷 대한민국
+          </div>
+          <div
+            class="option"
+            data-value="other"
+            onclick="selectOption(this, 'region', 'other')"
+          >
+            🌍 기타 국가
+          </div>
+        </div>
+
+        <div class="resultBox" id="result1" style="display: none">
+          전 세계 기준,<br />
+          당신이 이 지역에서 태어날 확률은<br />
+          약 <span class="highlight" id="prob1">0.6%</span> 입니다.<br />
+          <div class="fine" id="result1Reason" style="margin-top: 10px"></div>
+        </div>
+
+        <button class="btn" id="btn1" onclick="nextStep(2)" disabled>
+          다음 단계 →
+        </button>
+      </div>
+
+      <!-- STEP 2: 선진국 조건 -->
+      <div class="card step" id="step2">
+        <div class="stepNumber">STEP 2</div>
+        <div class="questionTitle">
+          당신이 태어난 나라는 어떤 환경에 가까웠나요?
+        </div>
+
+        <div class="checkboxGroup">
+          <div class="checkbox">
+            <input type="checkbox" id="check1" onchange="updateCheckboxes()" />
+            <label for="check1">안정적인 사회</label>
+          </div>
+          <div class="checkbox">
+            <input type="checkbox" id="check2" onchange="updateCheckboxes()" />
+            <label for="check2">교육 접근 가능</label>
+          </div>
+          <div class="checkbox">
+            <input type="checkbox" id="check3" onchange="updateCheckboxes()" />
+            <label for="check3">의료 시스템 이용 가능</label>
+          </div>
+          <div class="checkbox">
+            <input type="checkbox" id="check4" onchange="updateCheckboxes()" />
+            <label for="check4">전쟁·기근 없음</label>
+          </div>
+        </div>
+
+        <div class="resultBox gold" id="result2" style="display: none">
+          전 세계 출생 중<br />
+          이 조건을 만족하는 비율은<br />
+          약 <span class="highlight" id="prob2">17%</span> 입니다.<br />
+          <div class="fine" style="margin-top: 10px">
+            근거: 안정·교육·의료·비전쟁을 <b>동시에</b> 만족하는 환경의
+            <b>교집합</b>을 보수적으로 잡은 값 (약 15~20% 구간)
+          </div>
+        </div>
+
+        <button class="btn" id="btn2" onclick="confirmStep2()" disabled>
+          선택 완료
+        </button>
+      </div>
+
+      <!-- STEP 3: 지역 제외 확률 -->
+      <div class="card step" id="step3">
+        <div class="stepNumber">STEP 3</div>
+        <div class="questionTitle">
+          만약 다시 태어난다면, 아래 조건 중 피하고 싶은 환경을 직접 골라보세요.
+        </div>
+
+        <div class="checkboxGroup">
+          <div class="checkbox">
+            <input type="checkbox" id="exChina" onchange="updateExclusions()" />
+            <label for="exChina">중국</label>
+          </div>
+          <div class="checkbox">
+            <input type="checkbox" id="exIndia" onchange="updateExclusions()" />
+            <label for="exIndia">인도</label>
+          </div>
+          <div class="checkbox">
+            <input type="checkbox" id="exAfrica" onchange="updateExclusions()" />
+            <label for="exAfrica">아프리카 지역</label>
+          </div>
+          <div class="checkbox">
+            <input
+              type="checkbox"
+              id="exConflict"
+              onchange="updateExclusions()"
+            />
+            <label for="exConflict">분쟁·내전 위험이 있는 환경</label>
+          </div>
+          <div class="checkbox">
+            <input
+              type="checkbox"
+              id="exLowEdu"
+              onchange="updateExclusions()"
+            />
+            <label for="exLowEdu">기본 교육 접근이 어려운 환경</label>
+          </div>
+          <div class="checkbox">
+            <input
+              type="checkbox"
+              id="exLowHealth"
+              onchange="updateExclusions()"
+            />
+            <label for="exLowHealth">아플 때 제대로 치료받기 어려운 환경</label>
+          </div>
+          <div class="checkbox">
+            <input type="checkbox" id="exUnsafe" onchange="updateExclusions()" />
+            <label for="exUnsafe">일상적 안전(치안)이 불안한 환경</label>
+          </div>
+          <div class="checkbox">
+            <input
+              type="checkbox"
+              id="exExtremePoverty"
+              onchange="updateExclusions()"
+            />
+            <label for="exExtremePoverty">극저소득 국가 구간</label>
+          </div>
+          <div class="checkbox">
+            <input
+              type="checkbox"
+              id="exWater"
+              onchange="updateExclusions()"
+            />
+            <label for="exWater">깨끗한 식수·위생 인프라 취약</label>
+          </div>
+          <div class="checkbox">
+            <input
+              type="checkbox"
+              id="exCorruption"
+              onchange="updateExclusions()"
+            />
+            <label for="exCorruption">심각한 부패·법치 취약</label>
+          </div>
+        </div>
+
+        <div class="resultBox" id="result3" style="display: none">
+          현재 남는 확률<br />
+          <span class="highlight" id="regionProb">100.0%</span>
+          <div class="fine" id="regionMsg" style="margin-top: 8px">
+            아직 여유 있습니다.
+          </div>
+        </div>
+
+        <button class="btn" id="btn3" onclick="nextStep(4)">다음 단계 →</button>
+      </div>
+
+      <!-- STEP 4: 누적 계산 시작 -->
+      <div class="card step" id="step4">
+        <div class="stepNumber">STEP 4</div>
+        <div class="questionTitle">지금까지 선택한 조건을 한 줄로 정리</div>
+
+        <div class="summary" id="summary">
+          <div class="summaryItem">
+            ✔ <span id="summaryRegion">특정 지역에서</span>
+          </div>
+          <div class="summaryItem">
+            ✔ <span id="summaryCondition">비교적 안정적인 환경에서</span>
+          </div>
+          <div class="summaryItem">
+            ✔ <span id="summaryExclusions">피하고 싶은 환경 선택 없음</span>
+          </div>
+          <div class="summaryItem">
+            ✔ <span id="summaryRemaining">제외하고 싶은 환경 비중 0.0%</span>
+          </div>
+          <div class="summaryItem">✔ 태어났습니다</div>
+        </div>
+
+        <div class="resultBox">
+          이제,<br />
+          가장 기본적인 확률을 더해볼게요.<br />
+        </div>
+
+        <button class="btn" id="btn4" onclick="nextStep(5)">
+          최종 결과 보기 →
+        </button>
+      </div>
+
+      <!-- STEP 5: 마지막 공개 -->
+      <div class="card step" id="step5">
+        <div class="stepNumber">STEP 5</div>
+        <div class="questionTitle">🎯 최종 결과</div>
+
+        <div class="resultBox">
+          참고로,<br />
+          사람이 태어날 때<br />
+          정자는 평균<br />
+          약 <span class="highlight">3억 개</span> 중 하나가<br />
+          선택됩니다.
+        </div>
+
+        <div class="pause">잠깐 멈춤 (스크롤 or 클릭)</div>
+
+        <div class="resultBox gold" id="finalResult">
+          지금까지의 조건을 모두 합치면<br />
+          <div
+            class="highlight"
+            style="font-size: 24px; margin: 12px 0"
+            id="finalProb"
+          >
+            계산 중...
+          </div>
+          <div class="fine" id="finalProbNoSperm"></div>
+        </div>
+
+        <button class="btn" id="btn5" onclick="goToResult()">
+          📊 상세 결과 보기
+        </button>
+      </div>
+    </div>
+
+    <script>
+      const $ = (id) => document.getElementById(id);
+      let currentStep = 1;
+      let surveyData = {
+        region: null,
+        conditions: [],
+        exclusions: [],
+        regionRemaining: 1,
+        finalProbability: null,
+      };
+      let step2Confirmed = false;
+
+      // STEP 1: 지역 선택
+      function selectOption(element, type, value) {
+        // 같은 타입의 다른 옵션 선택 해제
+        const options = element.parentElement.querySelectorAll(".option");
+        options.forEach((opt) => opt.classList.remove("selected"));
+        element.classList.add("selected");
+
+        surveyData[type] = value;
+
+        // 결과 표시
+        const resultBox = $("result1");
+        const probElement = $("prob1");
+        const reasonElement = $("result1Reason");
+
+        if (value === "kr") {
+          // 대한민국: 약 0.6% (전 세계 인구 기준)
+          probElement.textContent = "0.6%";
+          reasonElement.innerHTML =
+            "근거: 전 세계 인구 80~81억, 대한민국 인구 5,100만<br />" +
+            "51,000,000 ÷ 8,100,000,000 ≈ 0.0063 → 약 0.63%";
+          resultBox.style.display = "block";
+        } else {
+          // 기타 국가: 결과 박스 표시 안 함
+          resultBox.style.display = "none";
+        }
+
+        $("btn1").disabled = false;
+        updateProgress(1);
+      }
+
+      // STEP 2: 체크박스 업데이트
+      function updateCheckboxes() {
+        const checks = [
+          $("check1").checked,
+          $("check2").checked,
+          $("check3").checked,
+          $("check4").checked,
+        ];
+
+        const checkedCount = checks.filter((c) => c).length;
+        surveyData.conditions = checks;
+
+        if (checkedCount >= 1) {
+          $("btn2").disabled = false;
+          updateProgress(2);
+          if (step2Confirmed) {
+            updateStep2Result(checkedCount);
+          }
+        } else {
+          $("result2").style.display = "none";
+          $("btn2").disabled = true;
+          step2Confirmed = false;
+          $("btn2").textContent = "선택 완료";
+        }
+      }
+
+      function confirmStep2() {
+        const checkedCount = surveyData.conditions.filter((c) => c).length;
+        if (!step2Confirmed) {
+          if (checkedCount < 1) {
+            return;
+          }
+          updateStep2Result(checkedCount);
+          $("result2").style.display = "block";
+          step2Confirmed = true;
+          $("btn2").textContent = "다음 단계 →";
+          return;
+        }
+        nextStep(3);
+      }
+
+      function updateStep2Result(count) {
+        const percentMap = {
+          1: "45%",
+          2: "30%",
+          3: "17%",
+          4: "8~9%",
+        };
+        $("prob2").textContent = percentMap[count] || "—";
+      }
+
+      function updateExclusions() {
+        const rates = {
+          exChina: 0.18,
+          exIndia: 0.18,
+          exAfrica: 0.18,
+          exConflict: 0.12,
+          exLowEdu: 0.2,
+          exLowHealth: 0.22,
+          exUnsafe: 0.18,
+          exExtremePoverty: 0.25,
+          exWater: 0.15,
+          exCorruption: 0.15,
+        };
+        const keys = Object.keys(rates);
+        const selectedKeys = keys.filter((key) => $(key).checked);
+        surveyData.exclusions = selectedKeys;
+
+        let remaining = 1;
+        selectedKeys.forEach((key) => {
+          remaining *= 1 - rates[key];
+        });
+
+        const remainingPercent = Math.round(remaining * 1000) / 10;
+        $("regionProb").textContent = `${remainingPercent.toFixed(1)}%`;
+        surveyData.regionRemaining = remaining;
+
+        let msg = "아직 여유 있음 😎";
+        if (remaining <= 0.1) {
+          msg = "이제는 ‘선택’이 아니라 ‘소원’ 수준";
+        } else if (remaining <= 0.2) {
+          msg = "이 정도면 다시 태어나기 빡셈";
+        } else if (remaining < 0.4) {
+          msg = "생각보다 빨리 줄죠?";
+        }
+        $("regionMsg").textContent = msg;
+        $("result3").style.display = "block";
+        updateProgress(3);
+      }
+
+      // STEP 4: 요약 업데이트
+      function showStep4() {
+        const regionText =
+          surveyData.region === "kr" ? "대한민국에서" : "특정 지역에서";
+        $("summaryRegion").textContent = regionText;
+
+        const conditionCount = surveyData.conditions.filter((c) => c).length;
+        const conditionText =
+          conditionCount >= 3
+            ? "비교적 안정적인 환경에서"
+            : "일부 조건을 만족하는 환경에서";
+        $("summaryCondition").textContent = conditionText;
+
+        const exclusionLabels = {
+          exChina: "중국",
+          exIndia: "인도",
+          exAfrica: "아프리카 지역",
+          exConflict: "분쟁·내전 위험 환경",
+          exLowEdu: "교육 접근 어려움",
+          exLowHealth: "의료 접근 어려움",
+          exUnsafe: "치안 불안",
+          exExtremePoverty: "극저소득 국가",
+          exWater: "식수·위생 취약",
+          exCorruption: "부패·법치 취약",
+        };
+        const selected = surveyData.exclusions || [];
+        const exclusionText =
+          selected.length > 0
+            ? `피하고 싶은 환경: ${selected
+                .map((key) => exclusionLabels[key] || key)
+                .join(", ")}`
+            : "피하고 싶은 환경 선택 없음";
+        $("summaryExclusions").textContent = exclusionText;
+
+        const remaining = surveyData.regionRemaining ?? 1;
+        const excludedPercent = ((1 - remaining) * 100).toFixed(1);
+        $("summaryRemaining").textContent = `제외하고 싶은 환경 비중 ${excludedPercent}%`;
+
+        updateProgress(4);
+      }
+
+      // STEP 5: 최종 확률 계산
+      function calculateFinal() {
+        // 간단한 계산 예시:
+        // STEP 1: 0.6% (대한민국) 또는 1-2% (기타)
+        // STEP 2: 조건 개수 기반 확률
+        // STEP 3: 제외 옵션 기반 남는 확률
+        // STEP 5: 정자 확률 포함/제외 모두 계산
+
+        let baseProb = surveyData.region === "kr" ? 0.006 : 0.015;
+        const conditionCount = surveyData.conditions.filter((c) => c).length;
+        const conditionProbMap = {
+          1: 0.45,
+          2: 0.3,
+          3: 0.17,
+          4: 0.085,
+        };
+        let conditionProb = conditionProbMap[conditionCount] || 1;
+        let regionProb = surveyData.regionRemaining || 1;
+        let spermProb = 1 / 300000000;
+
+        // 누적 확률 계산 (단순화된 버전)
+        let cumulative = baseProb * conditionProb * regionProb * spermProb;
+        let cumulativeNoSperm = baseProb * conditionProb * regionProb;
+
+        // 더 읽기 쉽게 표현
+        const finalPercent = (cumulative * 100).toFixed(10);
+        const finalRatio = Math.round(1 / cumulative).toLocaleString();
+        const finalPercentNoSperm = (cumulativeNoSperm * 100).toFixed(4);
+        const finalRatioNoSperm = Math.round(1 / cumulativeNoSperm).toLocaleString();
+
+        surveyData.finalProbability = {
+          percent: finalPercent,
+          ratio: finalRatio,
+        };
+
+        $(
+          "finalProb"
+        ).innerHTML = `약 ${finalRatio}분의 1<br /><span style="font-size: 16px;">(${finalPercent}%)</span>`;
+        $(
+          "finalProbNoSperm"
+        ).innerHTML = `정자 확률 제외: 약 ${finalRatioNoSperm}분의 1 (${finalPercentNoSperm}%)`;
+        updateProgress(5);
+      }
+
+      function nextStep(step) {
+        // 현재 단계 숨기기
+        $(`step${currentStep}`).classList.remove("active");
+
+        // 다음 단계 보이기
+        currentStep = step;
+        $(`step${step}`).classList.add("active");
+
+        // 각 단계별 특별 처리
+        if (step === 3) {
+          setTimeout(updateExclusions, 0);
+        } else if (step === 4) {
+          showStep4();
+        } else if (step === 5) {
+          setTimeout(calculateFinal, 500);
+        }
+
+        // 스크롤 맨 위로
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      }
+
+      function updateProgress(step) {
+        const progress = (step / 5) * 100;
+        $("progressFill").style.width = progress + "%";
+      }
+
+      function goToResult() {
+        // 설문 데이터를 URL 파라미터로 전달
+        const params = new URLSearchParams({
+          region: surveyData.region || "kr",
+          conditions: surveyData.conditions
+            .map((c) => (c ? "1" : "0"))
+            .join(""),
+          exclusions: (surveyData.exclusions || []).join(","),
+          remaining: (surveyData.regionRemaining ?? 1).toFixed(4),
+          final: surveyData.finalProbability?.ratio || "0",
+        });
+        window.location.href = `result.html?${params.toString()}`;
+      }
+
+      // 초기화
+      updateProgress(1);
+    </script>
+  </body>
+</html>
