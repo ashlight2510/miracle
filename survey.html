@@ -261,15 +261,56 @@
         color: var(--muted);
         font-size: 14px;
       }
+      .lang-switch {
+        position: fixed;
+        top: 16px;
+        right: 16px;
+        display: inline-flex;
+        gap: 0;
+        padding: 3px;
+        border-radius: 999px;
+        background: rgba(11, 18, 32, 0.95);
+        backdrop-filter: blur(10px);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+        z-index: 100;
+        border: 1px solid rgba(139, 233, 253, 0.3);
+      }
+      .lang-switch button {
+        border: none;
+        background: transparent;
+        color: rgba(255, 255, 255, 0.7);
+        font-size: 12px;
+        font-weight: 700;
+        padding: 7px 14px;
+        border-radius: 999px;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        min-width: 44px;
+        text-align: center;
+        letter-spacing: 0.02em;
+      }
+      .lang-switch button.active {
+        background: rgba(139, 233, 253, 0.2);
+        color: #8be9fd;
+        box-shadow: 0 2px 8px rgba(139, 233, 253, 0.4);
+      }
+      .lang-switch button:not(.active):hover {
+        background: rgba(139, 233, 253, 0.1);
+        color: rgba(255, 255, 255, 0.9);
+      }
     </style>
   </head>
 
   <body>
+    <div class="lang-switch" role="tablist" aria-label="Language switcher">
+      <button type="button" data-lang="ko" class="active">KR</button>
+      <button type="button" data-lang="en">EN</button>
+    </div>
     <div class="wrap">
       <header>
         <div class="brand">
           <div class="logo">MIRACLE</div>
-          <div class="subtitle">설문 진행 중</div>
+          <div class="subtitle" data-i18n="survey.subtitle">설문 진행 중</div>
         </div>
         <a
           href="index.html"
@@ -285,7 +326,9 @@
       <!-- STEP 1: 지역 선택 -->
       <div class="card step active" id="step1">
         <div class="stepNumber">STEP 1</div>
-        <div class="questionTitle">당신이 태어난 지역은?</div>
+        <div class="questionTitle" data-i18n="steps.step1Title">
+          당신이 태어난 지역은?
+        </div>
 
         <div class="options">
           <div
@@ -293,25 +336,35 @@
             data-value="kr"
             onclick="selectOption(this, 'region', 'kr')"
           >
-            🇰🇷 대한민국
+            <span data-i18n="options.regionKR">🇰🇷 대한민국</span>
           </div>
           <div
             class="option"
             data-value="other"
             onclick="selectOption(this, 'region', 'other')"
           >
-            🌍 기타 국가
+            <span data-i18n="options.regionOther">🌍 기타 국가</span>
           </div>
         </div>
 
         <div class="resultBox" id="result1" style="display: none">
-          전 세계 기준,<br />
-          당신이 이 지역에서 태어날 확률은<br />
-          약 <span class="highlight" id="prob1">0.6%</span> 입니다.<br />
+          <div data-i18n="result1.line1">전 세계 기준,</div>
+          <div data-i18n="result1.line2">당신이 이 지역에서 태어날 확률은</div>
+          <div>
+            <span data-i18n="result1.prefix">약 </span>
+            <span class="highlight" id="prob1">0.6%</span>
+            <span data-i18n="result1.suffix"> 입니다.</span>
+          </div>
           <div class="fine" id="result1Reason" style="margin-top: 10px"></div>
         </div>
 
-        <button class="btn" id="btn1" onclick="nextStep(2)" disabled>
+        <button
+          class="btn"
+          id="btn1"
+          data-i18n="btn.step1.next"
+          onclick="nextStep(2)"
+          disabled
+        >
           다음 단계 →
         </button>
       </div>
@@ -319,40 +372,58 @@
       <!-- STEP 2: 선진국 조건 -->
       <div class="card step" id="step2">
         <div class="stepNumber">STEP 2</div>
-        <div class="questionTitle">
+        <div class="questionTitle" data-i18n="steps.step2Title">
           당신이 태어난 나라는 어떤 환경에 가까웠나요?
         </div>
 
         <div class="checkboxGroup">
           <div class="checkbox">
             <input type="checkbox" id="check1" onchange="updateCheckboxes()" />
-            <label for="check1">안정적인 사회</label>
+            <label for="check1" data-i18n="conditions.check1">
+              안정적인 사회
+            </label>
           </div>
           <div class="checkbox">
             <input type="checkbox" id="check2" onchange="updateCheckboxes()" />
-            <label for="check2">교육 접근 가능</label>
+            <label for="check2" data-i18n="conditions.check2">
+              교육 접근 가능
+            </label>
           </div>
           <div class="checkbox">
             <input type="checkbox" id="check3" onchange="updateCheckboxes()" />
-            <label for="check3">의료 시스템 이용 가능</label>
+            <label for="check3" data-i18n="conditions.check3">
+              의료 시스템 이용 가능
+            </label>
           </div>
           <div class="checkbox">
             <input type="checkbox" id="check4" onchange="updateCheckboxes()" />
-            <label for="check4">전쟁·기근 없음</label>
+            <label for="check4" data-i18n="conditions.check4">
+              전쟁·기근 없음
+            </label>
           </div>
         </div>
 
         <div class="resultBox gold" id="result2" style="display: none">
-          전 세계 출생 중<br />
-          이 조건을 만족하는 비율은<br />
-          약 <span class="highlight" id="prob2">17%</span> 입니다.<br />
-          <div class="fine" style="margin-top: 10px">
+          <div data-i18n="result2.line1">전 세계 출생 중</div>
+          <div data-i18n="result2.line2">이 조건을 만족하는 비율은</div>
+          <div>
+            <span data-i18n="result2.prefix">약 </span>
+            <span class="highlight" id="prob2">17%</span>
+            <span data-i18n="result2.suffix"> 입니다.</span>
+          </div>
+          <div class="fine" data-i18n-html="result2.reason" style="margin-top: 10px">
             근거: 안정·교육·의료·비전쟁을 <b>동시에</b> 만족하는 환경의
             <b>교집합</b>을 보수적으로 잡은 값 (약 15~20% 구간)
           </div>
         </div>
 
-        <button class="btn" id="btn2" onclick="confirmStep2()" disabled>
+        <button
+          class="btn"
+          id="btn2"
+          data-i18n="btn.step2.confirm"
+          onclick="confirmStep2()"
+          disabled
+        >
           선택 완료
         </button>
       </div>
@@ -360,22 +431,24 @@
       <!-- STEP 3: 지역 제외 확률 -->
       <div class="card step" id="step3">
         <div class="stepNumber">STEP 3</div>
-        <div class="questionTitle">
+        <div class="questionTitle" data-i18n="steps.step3Title">
           만약 다시 태어난다면, 아래 조건 중 피하고 싶은 환경을 직접 골라보세요.
         </div>
 
         <div class="checkboxGroup">
           <div class="checkbox">
             <input type="checkbox" id="exChina" onchange="updateExclusions()" />
-            <label for="exChina">중국</label>
+            <label for="exChina" data-i18n="exclusions.exChina">중국</label>
           </div>
           <div class="checkbox">
             <input type="checkbox" id="exIndia" onchange="updateExclusions()" />
-            <label for="exIndia">인도</label>
+            <label for="exIndia" data-i18n="exclusions.exIndia">인도</label>
           </div>
           <div class="checkbox">
             <input type="checkbox" id="exAfrica" onchange="updateExclusions()" />
-            <label for="exAfrica">아프리카 지역</label>
+            <label for="exAfrica" data-i18n="exclusions.exAfrica">
+              아프리카 지역
+            </label>
           </div>
           <div class="checkbox">
             <input
@@ -383,7 +456,9 @@
               id="exConflict"
               onchange="updateExclusions()"
             />
-            <label for="exConflict">분쟁·내전 위험이 있는 환경</label>
+            <label for="exConflict" data-i18n="exclusions.exConflict">
+              분쟁·내전 위험이 있는 환경
+            </label>
           </div>
           <div class="checkbox">
             <input
@@ -391,7 +466,9 @@
               id="exLowEdu"
               onchange="updateExclusions()"
             />
-            <label for="exLowEdu">기본 교육 접근이 어려운 환경</label>
+            <label for="exLowEdu" data-i18n="exclusions.exLowEdu">
+              기본 교육 접근이 어려운 환경
+            </label>
           </div>
           <div class="checkbox">
             <input
@@ -399,11 +476,15 @@
               id="exLowHealth"
               onchange="updateExclusions()"
             />
-            <label for="exLowHealth">아플 때 제대로 치료받기 어려운 환경</label>
+            <label for="exLowHealth" data-i18n="exclusions.exLowHealth">
+              아플 때 제대로 치료받기 어려운 환경
+            </label>
           </div>
           <div class="checkbox">
             <input type="checkbox" id="exUnsafe" onchange="updateExclusions()" />
-            <label for="exUnsafe">일상적 안전(치안)이 불안한 환경</label>
+            <label for="exUnsafe" data-i18n="exclusions.exUnsafe">
+              일상적 안전(치안)이 불안한 환경
+            </label>
           </div>
           <div class="checkbox">
             <input
@@ -411,7 +492,9 @@
               id="exExtremePoverty"
               onchange="updateExclusions()"
             />
-            <label for="exExtremePoverty">극저소득 국가 구간</label>
+            <label for="exExtremePoverty" data-i18n="exclusions.exExtremePoverty">
+              극저소득 국가 구간
+            </label>
           </div>
           <div class="checkbox">
             <input
@@ -419,7 +502,9 @@
               id="exWater"
               onchange="updateExclusions()"
             />
-            <label for="exWater">깨끗한 식수·위생 인프라 취약</label>
+            <label for="exWater" data-i18n="exclusions.exWater">
+              깨끗한 식수·위생 인프라 취약
+            </label>
           </div>
           <div class="checkbox">
             <input
@@ -427,25 +512,41 @@
               id="exCorruption"
               onchange="updateExclusions()"
             />
-            <label for="exCorruption">심각한 부패·법치 취약</label>
+            <label for="exCorruption" data-i18n="exclusions.exCorruption">
+              심각한 부패·법치 취약
+            </label>
           </div>
         </div>
 
         <div class="resultBox" id="result3" style="display: none">
-          현재 남는 확률<br />
+          <div data-i18n="result3.line1">현재 남는 확률</div>
           <span class="highlight" id="regionProb">100.0%</span>
-          <div class="fine" id="regionMsg" style="margin-top: 8px">
+          <div
+            class="fine"
+            id="regionMsg"
+            data-i18n="result3.msg.default"
+            style="margin-top: 8px"
+          >
             아직 여유 있습니다.
           </div>
         </div>
 
-        <button class="btn" id="btn3" onclick="nextStep(4)">다음 단계 →</button>
+        <button
+          class="btn"
+          id="btn3"
+          data-i18n="btn.step3.next"
+          onclick="nextStep(4)"
+        >
+          다음 단계 →
+        </button>
       </div>
 
       <!-- STEP 4: 누적 계산 시작 -->
       <div class="card step" id="step4">
         <div class="stepNumber">STEP 4</div>
-        <div class="questionTitle">지금까지 선택한 조건을 한 줄로 정리</div>
+        <div class="questionTitle" data-i18n="steps.step4Title">
+          지금까지 선택한 조건을 한 줄로 정리
+        </div>
 
         <div class="summary" id="summary">
           <div class="summaryItem">
@@ -460,15 +561,22 @@
           <div class="summaryItem">
             ✔ <span id="summaryRemaining">제외하고 싶은 환경 비중 0.0%</span>
           </div>
-          <div class="summaryItem">✔ 태어났습니다</div>
+          <div class="summaryItem" data-i18n="step4.summary.conclusion">
+            ✔ 태어났습니다
+          </div>
         </div>
 
-        <div class="resultBox">
+        <div class="resultBox" data-i18n-html="step4.resultBox">
           이제,<br />
           가장 기본적인 확률을 더해볼게요.<br />
         </div>
 
-        <button class="btn" id="btn4" onclick="nextStep(5)">
+        <button
+          class="btn"
+          id="btn4"
+          data-i18n="btn.step4.next"
+          onclick="nextStep(5)"
+        >
           최종 결과 보기 →
         </button>
       </div>
@@ -476,9 +584,9 @@
       <!-- STEP 5: 마지막 공개 -->
       <div class="card step" id="step5">
         <div class="stepNumber">STEP 5</div>
-        <div class="questionTitle">🎯 최종 결과</div>
+        <div class="questionTitle" data-i18n="steps.step5Title">🎯 최종 결과</div>
 
-        <div class="resultBox">
+        <div class="resultBox" data-i18n-html="step5.tip">
           참고로,<br />
           사람이 태어날 때<br />
           정자는 평균<br />
@@ -486,27 +594,334 @@
           선택됩니다.
         </div>
 
-        <div class="pause">잠깐 멈춤 (스크롤 or 클릭)</div>
+        <div class="pause" data-i18n="step5.pause">
+          잠깐 멈춤 (스크롤 or 클릭)
+        </div>
 
         <div class="resultBox gold" id="finalResult">
-          지금까지의 조건을 모두 합치면<br />
+          <div data-i18n-html="step5.finalIntro">
+            지금까지의 조건을 모두 합치면<br />
+          </div>
           <div
             class="highlight"
             style="font-size: 24px; margin: 12px 0"
             id="finalProb"
+            data-i18n="step5.finalPending"
           >
             계산 중...
           </div>
           <div class="fine" id="finalProbNoSperm"></div>
         </div>
 
-        <button class="btn" id="btn5" onclick="goToResult()">
+        <button class="btn" id="btn5" data-i18n="btn.step5.details" onclick="goToResult()">
           📊 상세 결과 보기
         </button>
       </div>
     </div>
 
     <script>
+      const translations = {
+        ko: {
+          survey: {
+            metaTitle: "MIRACLE | 설문",
+            metaDescription:
+              "한국보다 조건 지수가 조금 더 높은 나라에서 태어날 확률을 숫자로 체감해보는 페이지. 국가 우열 판단 없이, 확률 분포만 다룹니다.",
+            subtitle: "설문 진행 중",
+          },
+          steps: {
+            step1Title: "당신이 태어난 지역은?",
+            step2Title: "당신이 태어난 나라는 어떤 환경에 가까웠나요?",
+            step3Title:
+              "만약 다시 태어난다면, 아래 조건 중 피하고 싶은 환경을 직접 골라보세요.",
+            step4Title: "지금까지 선택한 조건을 한 줄로 정리",
+            step5Title: "🎯 최종 결과",
+          },
+          options: {
+            regionKR: "🇰🇷 대한민국",
+            regionOther: "🌍 기타 국가",
+          },
+          result1: {
+            line1: "전 세계 기준,",
+            line2: "당신이 이 지역에서 태어날 확률은",
+            prefix: "약 ",
+            suffix: " 입니다.",
+            reason:
+              "근거: 전 세계 인구 80~81억, 대한민국 인구 5,100만<br />51,000,000 ÷ 8,100,000,000 ≈ 0.0063 → 약 0.63%",
+          },
+          conditions: {
+            check1: "안정적인 사회",
+            check2: "교육 접근 가능",
+            check3: "의료 시스템 이용 가능",
+            check4: "전쟁·기근 없음",
+          },
+          result2: {
+            line1: "전 세계 출생 중",
+            line2: "이 조건을 만족하는 비율은",
+            prefix: "약 ",
+            suffix: " 입니다.",
+            reason:
+              "근거: 안정·교육·의료·비전쟁을 <b>동시에</b> 만족하는 환경의 <b>교집합</b>을 보수적으로 잡은 값 (약 15~20% 구간)",
+          },
+          btn: {
+            step1: { next: "다음 단계 →" },
+            step2: { confirm: "선택 완료", next: "다음 단계 →" },
+            step3: { next: "다음 단계 →" },
+            step4: { next: "최종 결과 보기 →" },
+            step5: { details: "📊 상세 결과 보기" },
+          },
+          exclusions: {
+            exChina: "중국",
+            exIndia: "인도",
+            exAfrica: "아프리카 지역",
+            exConflict: "분쟁·내전 위험이 있는 환경",
+            exLowEdu: "기본 교육 접근이 어려운 환경",
+            exLowHealth: "아플 때 제대로 치료받기 어려운 환경",
+            exUnsafe: "일상적 안전(치안)이 불안한 환경",
+            exExtremePoverty: "극저소득 국가 구간",
+            exWater: "깨끗한 식수·위생 인프라 취약",
+            exCorruption: "심각한 부패·법치 취약",
+          },
+          result3: {
+            line1: "현재 남는 확률",
+            msg: {
+              default: "아직 여유 있음 😎",
+              low1: "이제는 ‘선택’이 아니라 ‘소원’ 수준",
+              low2: "이 정도면 다시 태어나기 빡셈",
+              low3: "생각보다 빨리 줄죠?",
+            },
+          },
+          step4: {
+            resultBox: "이제,<br />가장 기본적인 확률을 더해볼게요.<br />",
+            summary: {
+              region: {
+                kr: "대한민국에서",
+                other: "특정 지역에서",
+              },
+              condition: {
+                high: "비교적 안정적인 환경에서",
+                low: "일부 조건을 만족하는 환경에서",
+              },
+              exclusion: {
+                none: "피하고 싶은 환경 선택 없음",
+                prefix: "피하고 싶은 환경: ",
+              },
+              remaining: "제외하고 싶은 환경 비중 {percent}%",
+              conclusion: "✔ 태어났습니다",
+            },
+          },
+          step5: {
+            tip:
+              "참고로,<br />사람이 태어날 때<br />정자는 평균<br />약 <span class=\"highlight\">3억 개</span> 중 하나가<br />선택됩니다.",
+            pause: "잠깐 멈춤 (스크롤 or 클릭)",
+            finalIntro: "지금까지의 조건을 모두 합치면<br />",
+            finalProbTemplate:
+              "약 {ratio}분의 1<br /><span style=\"font-size: 16px;\">({percent}%)</span>",
+            finalProbNoSpermTemplate:
+              "정자 확률 제외: 약 {ratio}분의 1 ({percent}%)",
+            finalPending: "계산 중...",
+          },
+        },
+        en: {
+          survey: {
+            metaTitle: "MIRACLE | Survey",
+            metaDescription:
+              "A page to experience the probability of being born in a country with a slightly higher condition index than Korea. It only deals with probability distribution, without judging national superiority.",
+            subtitle: "Survey in progress",
+          },
+          steps: {
+            step1Title: "Where were you born?",
+            step2Title:
+              "Which environment best matches the country where you were born?",
+            step3Title:
+              "If you were reborn, which of the following environments would you avoid?",
+            step4Title: "Summarize the choices you've made so far",
+            step5Title: "🎯 Final result",
+          },
+          options: {
+            regionKR: "🇰🇷 South Korea",
+            regionOther: "🌍 Other countries",
+          },
+          result1: {
+            line1: "On a global scale,",
+            line2: "the probability of being born in this region is",
+            prefix: "About ",
+            suffix: ".",
+            reason:
+              "Basis: Global population ~8.1B vs South Korea ~51M<br />51,000,000 ÷ 8,100,000,000 ≈ 0.0063 → about 0.63%",
+          },
+          conditions: {
+            check1: "Stable society",
+            check2: "Access to education",
+            check3: "Access to healthcare",
+            check4: "No war or famine",
+          },
+          result2: {
+            line1: "Among worldwide births",
+            line2: "the share that meets these conditions is",
+            prefix: "About ",
+            suffix: ".",
+            reason:
+              "Basis: conservatively taking the <b>intersection</b> of stability, education, healthcare, and peace indicators (roughly 15–20%).",
+          },
+          btn: {
+            step1: { next: "Next step →" },
+            step2: { confirm: "Confirm selection", next: "Next step →" },
+            step3: { next: "Next step →" },
+            step4: { next: "View final result →" },
+            step5: { details: "📊 View detailed results" },
+          },
+          exclusions: {
+            exChina: "China",
+            exIndia: "India",
+            exAfrica: "Africa region",
+            exConflict: "Conflict or civil war risk",
+            exLowEdu: "Limited education access",
+            exLowHealth: "Limited healthcare access",
+            exUnsafe: "Unsafe daily security",
+            exExtremePoverty: "Extreme poverty countries",
+            exWater: "Weak water & sanitation",
+            exCorruption: "Severe corruption/legal weakness",
+          },
+          result3: {
+            line1: "Current remaining probability",
+            msg: {
+              default: "Still plenty of room 😎",
+              low1: "This is no longer a choice but a wish",
+              low2: "At this point, being reborn is tough",
+              low3: "It shrinks faster than you'd expect",
+            },
+          },
+          step4: {
+            resultBox: "Now,<br />let's add up the basic probabilities.<br />",
+            summary: {
+              region: {
+                kr: "In South Korea",
+                other: "In another region",
+              },
+              condition: {
+                high: "In a relatively stable environment",
+                low: "In an environment meeting some of the conditions",
+              },
+              exclusion: {
+                none: "No avoided environments selected",
+                prefix: "Avoided environments: ",
+              },
+              remaining: "Excluded environment share {percent}%",
+              conclusion: "✔ You've been born",
+            },
+          },
+          step5: {
+            tip:
+              "FYI,<br />when a person is born,<br />one sperm out of an average<br />of <span class=\"highlight\">300 million</span> is selected.",
+            pause: "Pause here (scroll or click)",
+            finalIntro: "When you combine all the conditions so far,<br />",
+            finalProbTemplate:
+              "About 1 in {ratio}<br /><span style=\"font-size: 16px;\">({percent}%)</span>",
+            finalProbNoSpermTemplate:
+              "Excluding sperm probability: about 1 in {ratio} ({percent}%)",
+            finalPending: "Calculating...",
+          },
+        },
+      };
+
+      const defaultLang = "ko";
+      const supportedLangs = ["ko", "en"];
+      let currentLang = defaultLang;
+
+      function getTranslationValue(path, lang = currentLang) {
+        return path
+          .split(".")
+          .reduce((obj, segment) => {
+            if (!obj || typeof obj !== "object") return undefined;
+            return Object.prototype.hasOwnProperty.call(obj, segment)
+              ? obj[segment]
+              : undefined;
+          }, translations[lang]);
+      }
+
+      function t(key, vars = {}) {
+        if (!key) return "";
+        const value = getTranslationValue(key);
+        if (typeof value !== "string") {
+          return value ?? key;
+        }
+        return Object.entries(vars).reduce(
+          (text, [varName, varValue]) =>
+            text.replace(new RegExp(`\\{${varName}\\}`, "g"), varValue),
+          value
+        );
+      }
+
+      function detectLang() {
+        const params = new URLSearchParams(window.location.search);
+        const paramLang = params.get("lang");
+        if (supportedLangs.includes(paramLang)) {
+          return paramLang;
+        }
+        const stored = window.localStorage?.getItem("preferredLang");
+        if (supportedLangs.includes(stored)) {
+          return stored;
+        }
+        const intlLocale =
+          typeof Intl === "object" && typeof Intl.DateTimeFormat === "function"
+            ? Intl.DateTimeFormat().resolvedOptions().locale
+            : "";
+        const sources = [
+          ...(navigator.languages || []),
+          navigator.language,
+          navigator.userLanguage,
+          intlLocale,
+        ]
+          .filter(Boolean)
+          .map((locale) => locale.toLowerCase());
+        const hasKorean = sources.some((locale) => locale.startsWith("ko"));
+        return hasKorean ? "ko" : "en";
+      }
+
+      function applyTranslations() {
+        document.title = t("survey.metaTitle");
+        const descMeta = document.querySelector('meta[name="description"]');
+        if (descMeta) {
+          descMeta.setAttribute("content", t("survey.metaDescription"));
+        }
+        document.documentElement.lang = currentLang;
+        document.querySelectorAll("[data-i18n]").forEach((el) => {
+          const key = el.dataset.i18n;
+          if (!key) return;
+          el.textContent = t(key);
+        });
+        document.querySelectorAll("[data-i18n-html]").forEach((el) => {
+          const key = el.dataset.i18nHtml;
+          if (!key) return;
+          el.innerHTML = t(key);
+        });
+        document.querySelectorAll(".lang-switch button").forEach((button) => {
+          button.classList.toggle(
+            "active",
+            button.dataset.lang === currentLang
+          );
+        });
+        refreshDynamicTexts();
+      }
+
+      function setLang(lang, options = {}) {
+        const nextLang = supportedLangs.includes(lang) ? lang : defaultLang;
+        currentLang = nextLang;
+        window.currentLang = currentLang;
+        document.documentElement.lang = nextLang;
+        try {
+          window.localStorage?.setItem("preferredLang", nextLang);
+        } catch (e) {
+          // ignore
+        }
+        if (options.updateUrl) {
+          const url = new URL(window.location.href);
+          url.searchParams.set("lang", nextLang);
+          window.history.replaceState({}, "", url);
+        }
+        applyTranslations();
+      }
+
       const $ = (id) => document.getElementById(id);
       let currentStep = 1;
       let surveyData = {
@@ -518,29 +933,73 @@
       };
       let step2Confirmed = false;
 
+      function refreshDynamicTexts() {
+        if (surveyData.region === "kr" && $("result1").style.display === "block") {
+          $("result1Reason").innerHTML = t("result1.reason");
+        }
+        updateStep2ButtonLabel();
+        updateRegionMessageDisplay(surveyData.regionRemaining ?? 1);
+        if (currentStep === 4) {
+          showStep4();
+        }
+        renderFinalProbability();
+      }
+
+      function updateStep2ButtonLabel() {
+        const key = step2Confirmed ? "btn.step2.next" : "btn.step2.confirm";
+        $("btn2").textContent = t(key);
+      }
+
+      function getRegionMessage(remaining) {
+        if (remaining <= 0.1) {
+          return t("result3.msg.low1");
+        }
+        if (remaining <= 0.2) {
+          return t("result3.msg.low2");
+        }
+        if (remaining < 0.4) {
+          return t("result3.msg.low3");
+        }
+        return t("result3.msg.default");
+      }
+
+      function updateRegionMessageDisplay(remaining = surveyData.regionRemaining ?? 1) {
+        $("regionMsg").textContent = getRegionMessage(remaining);
+      }
+
+      function renderFinalProbability() {
+        const data = surveyData.finalProbability;
+        if (!data) return;
+        $("finalProb").innerHTML = t("step5.finalProbTemplate", {
+          ratio: data.ratio,
+          percent: data.percent,
+        });
+        $("finalProbNoSperm").innerHTML = t(
+          "step5.finalProbNoSpermTemplate",
+          {
+            ratio: data.ratioNoSperm,
+            percent: data.percentNoSperm,
+          }
+        );
+      }
+
       // STEP 1: 지역 선택
       function selectOption(element, type, value) {
-        // 같은 타입의 다른 옵션 선택 해제
         const options = element.parentElement.querySelectorAll(".option");
         options.forEach((opt) => opt.classList.remove("selected"));
         element.classList.add("selected");
 
         surveyData[type] = value;
 
-        // 결과 표시
         const resultBox = $("result1");
         const probElement = $("prob1");
         const reasonElement = $("result1Reason");
 
         if (value === "kr") {
-          // 대한민국: 약 0.6% (전 세계 인구 기준)
           probElement.textContent = "0.6%";
-          reasonElement.innerHTML =
-            "근거: 전 세계 인구 80~81억, 대한민국 인구 5,100만<br />" +
-            "51,000,000 ÷ 8,100,000,000 ≈ 0.0063 → 약 0.63%";
+          reasonElement.innerHTML = t("result1.reason");
           resultBox.style.display = "block";
         } else {
-          // 기타 국가: 결과 박스 표시 안 함
           resultBox.style.display = "none";
         }
 
@@ -570,7 +1029,7 @@
           $("result2").style.display = "none";
           $("btn2").disabled = true;
           step2Confirmed = false;
-          $("btn2").textContent = "선택 완료";
+          updateStep2ButtonLabel();
         }
       }
 
@@ -583,7 +1042,7 @@
           updateStep2Result(checkedCount);
           $("result2").style.display = "block";
           step2Confirmed = true;
-          $("btn2").textContent = "다음 단계 →";
+          updateStep2ButtonLabel();
           return;
         }
         nextStep(3);
@@ -625,15 +1084,7 @@
         $("regionProb").textContent = `${remainingPercent.toFixed(1)}%`;
         surveyData.regionRemaining = remaining;
 
-        let msg = "아직 여유 있음 😎";
-        if (remaining <= 0.1) {
-          msg = "이제는 ‘선택’이 아니라 ‘소원’ 수준";
-        } else if (remaining <= 0.2) {
-          msg = "이 정도면 다시 태어나기 빡셈";
-        } else if (remaining < 0.4) {
-          msg = "생각보다 빨리 줄죠?";
-        }
-        $("regionMsg").textContent = msg;
+        updateRegionMessageDisplay(remaining);
         $("result3").style.display = "block";
         updateProgress(3);
       }
@@ -641,52 +1092,41 @@
       // STEP 4: 요약 업데이트
       function showStep4() {
         const regionText =
-          surveyData.region === "kr" ? "대한민국에서" : "특정 지역에서";
+          surveyData.region === "kr"
+            ? t("step4.summary.region.kr")
+            : t("step4.summary.region.other");
         $("summaryRegion").textContent = regionText;
 
         const conditionCount = surveyData.conditions.filter((c) => c).length;
-        const conditionText =
+        const conditionKey =
           conditionCount >= 3
-            ? "비교적 안정적인 환경에서"
-            : "일부 조건을 만족하는 환경에서";
-        $("summaryCondition").textContent = conditionText;
+            ? "step4.summary.condition.high"
+            : "step4.summary.condition.low";
+        $("summaryCondition").textContent = t(conditionKey);
 
-        const exclusionLabels = {
-          exChina: "중국",
-          exIndia: "인도",
-          exAfrica: "아프리카 지역",
-          exConflict: "분쟁·내전 위험 환경",
-          exLowEdu: "교육 접근 어려움",
-          exLowHealth: "의료 접근 어려움",
-          exUnsafe: "치안 불안",
-          exExtremePoverty: "극저소득 국가",
-          exWater: "식수·위생 취약",
-          exCorruption: "부패·법치 취약",
-        };
         const selected = surveyData.exclusions || [];
         const exclusionText =
           selected.length > 0
-            ? `피하고 싶은 환경: ${selected
-                .map((key) => exclusionLabels[key] || key)
+            ? `${t("step4.summary.exclusion.prefix")}${selected
+                .map((key) => t(`exclusions.${key}`) || key)
                 .join(", ")}`
-            : "피하고 싶은 환경 선택 없음";
+            : t("step4.summary.exclusion.none");
         $("summaryExclusions").textContent = exclusionText;
 
         const remaining = surveyData.regionRemaining ?? 1;
         const excludedPercent = ((1 - remaining) * 100).toFixed(1);
-        $("summaryRemaining").textContent = `제외하고 싶은 환경 비중 ${excludedPercent}%`;
+        $("summaryRemaining").textContent = t(
+          "step4.summary.remaining",
+          {
+            percent: excludedPercent,
+          }
+        );
 
         updateProgress(4);
       }
 
       // STEP 5: 최종 확률 계산
       function calculateFinal() {
-        // 간단한 계산 예시:
-        // STEP 1: 0.6% (대한민국) 또는 1-2% (기타)
-        // STEP 2: 조건 개수 기반 확률
-        // STEP 3: 제외 옵션 기반 남는 확률
-        // STEP 5: 정자 확률 포함/제외 모두 계산
-
         let baseProb = surveyData.region === "kr" ? 0.006 : 0.015;
         const conditionCount = surveyData.conditions.filter((c) => c).length;
         const conditionProbMap = {
@@ -699,39 +1139,30 @@
         let regionProb = surveyData.regionRemaining || 1;
         let spermProb = 1 / 300000000;
 
-        // 누적 확률 계산 (단순화된 버전)
         let cumulative = baseProb * conditionProb * regionProb * spermProb;
         let cumulativeNoSperm = baseProb * conditionProb * regionProb;
 
-        // 더 읽기 쉽게 표현
         const finalPercent = (cumulative * 100).toFixed(10);
         const finalRatio = Math.round(1 / cumulative).toLocaleString();
         const finalPercentNoSperm = (cumulativeNoSperm * 100).toFixed(4);
         const finalRatioNoSperm = Math.round(1 / cumulativeNoSperm).toLocaleString();
 
         surveyData.finalProbability = {
-          percent: finalPercent,
           ratio: finalRatio,
+          percent: finalPercent,
+          ratioNoSperm: finalRatioNoSperm,
+          percentNoSperm: finalPercentNoSperm,
         };
 
-        $(
-          "finalProb"
-        ).innerHTML = `약 ${finalRatio}분의 1<br /><span style="font-size: 16px;">(${finalPercent}%)</span>`;
-        $(
-          "finalProbNoSperm"
-        ).innerHTML = `정자 확률 제외: 약 ${finalRatioNoSperm}분의 1 (${finalPercentNoSperm}%)`;
+        renderFinalProbability();
         updateProgress(5);
       }
 
       function nextStep(step) {
-        // 현재 단계 숨기기
         $(`step${currentStep}`).classList.remove("active");
-
-        // 다음 단계 보이기
         currentStep = step;
         $(`step${step}`).classList.add("active");
 
-        // 각 단계별 특별 처리
         if (step === 3) {
           setTimeout(updateExclusions, 0);
         } else if (step === 4) {
@@ -740,7 +1171,6 @@
           setTimeout(calculateFinal, 500);
         }
 
-        // 스크롤 맨 위로
         window.scrollTo({ top: 0, behavior: "smooth" });
       }
 
@@ -750,7 +1180,6 @@
       }
 
       function goToResult() {
-        // 설문 데이터를 URL 파라미터로 전달
         const params = new URLSearchParams({
           region: surveyData.region || "kr",
           conditions: surveyData.conditions
@@ -763,7 +1192,13 @@
         window.location.href = `result.html?${params.toString()}`;
       }
 
-      // 초기화
+      document.querySelectorAll(".lang-switch button").forEach((button) => {
+        button.addEventListener("click", () => {
+          setLang(button.dataset.lang, { updateUrl: true });
+        });
+      });
+
+      setLang(detectLang(), { updateUrl: false });
       updateProgress(1);
     </script>
   </body>
